@@ -1,60 +1,96 @@
-<!----/*IMPROVED UI*/-->
+<!----/*IMPROVED UI*/ Multilanguage support--> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online  C Compiler</title>
+    <title>Online Compiler</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/editor/editor.main.css">
+    <link rel="stylesheet" href="/static/style.css">
     <style>
-		/*IMPROVED UI*/
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f4f6f9;
-            color: #333;
-        }
+            body{
+                font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                background-color: #f8f9fa;
+                color: #212529;
+            }
 
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
+            header {
+                background-color: #1d3557;
+                color: white;
+                padding: 15px;
+                font-size: 1.5rem;
+                text-align: center;
+                font-weight: bold;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
 
-        #editor-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            margin: 20px auto;
-            max-width: 900px;
-            width: 100%;
-        }
+            #controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                background: #f1f1f1;
+                border-bottom: 1px solid #ddd;
+            }
 
-        #editor {
-            flex: 1;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+            #editor-container {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1; /* Make this container take up all the available space */
+                overflow: hidden;
+            }
 
-        #controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
+            #split-container {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: row;
+                overflow: hidden;
+                padding-bottom: 20px; /* Added padding at the bottom of the container */
+                margin-bottom: 1rem;
+            }
+           
 
-        button {
-            background-color: #4CAF50;
+            #editor,#output {
+                white-space: pre-wrap; /* Ensures that long lines wrap to the next line */
+                word-wrap: break-word; /* Allows breaking long words if necessary */
+                word-break: break-word;
+                flex-basis: 30%;
+                min-width: 200px;
+                background: #ffffff;
+                border-left: 1px solid #ddd;
+                padding-left: 20px;
+                padding-top: 10px;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1rem;
+                white-space: pre-wrap;
+                margin: 1rem;
+                margin-bottom: 20px; /* Ensure there is a bottom margin */
+                box-sizing: border-box;
+                overflow: auto;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+                border-radius: 8px;
+            }
+            #editor{
+                flex-basis: 70%;
+                
+            }
+            #output {
+                flex-basis: 30%;
+            }
+
+
+
+
+        
+
+        button, #language-selector {
+            background-color: #457b9d;
             color: white;
             border: none;
             border-radius: 5px;
@@ -64,34 +100,26 @@
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #45a049;
+        button:disabled {
+            background-color: #a9d6e5;
+            cursor: not-allowed;
         }
 
-        #output {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9rem;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            white-space: pre-wrap;
-            overflow: auto;
-            max-height: 200px;
+        button:hover:enabled {
+            background-color: #1d3557;
         }
 
         footer {
-            background-color: #f1f1f1;
+            background-color: #1d3557;
             padding: 10px 20px;
             text-align: center;
             font-size: 0.9rem;
-            color: #666;
+            color: white;
+            margin-top: auto; /* Ensures the footer is pushed to the bottom */
         }
 
         footer a {
-            color: #4CAF50;
+            color: #a8dadc;
             text-decoration: none;
         }
 
@@ -99,35 +127,54 @@
             text-decoration: underline;
         }
 
-        @media (max-width: 768px) {
-            #controls {
-                flex-direction: column;
-                gap: 10px;
-            }
+       /* Responsive Adjustments */
+@media (max-width: 1024px) {
+    #split-container {
+        flex-direction: column;
+    }
+    #editor, #output {
+        flex-basis: 100%;
+        height: 50%;
+    }
+}
 
-            button {
-                width: 100%;
-            }
 
-            #editor-container {
-                margin: 10px;
-                max-width: 100%;
-            }
-        }
+
+
+
+
+
+
+
+        
     </style>
 </head>
 <body>
     <header>Online Compiler</header>
+
     <div id="editor-container">
-        <div id="editor"></div>
         <div id="controls">
+            <select id="language-selector">
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+            </select>
             <button id="run">Run Code</button>
         </div>
-        <div id="output">Output will appear here...</div>
+
+        <div id="split-container">
+            <div id="editor"></div>
+            <div id="resizer"></div>
+            <div id="output">Output will appear here...</div>
+        </div>
     </div>
+
     <footer>
         Built with ❤️ for coding enthusiasts. View on <a href="#">GitHub</a>.
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
     <script>
         // Load Monaco Editor
@@ -137,20 +184,84 @@
                 value: `#include <stdio.h>\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
                 language: 'c',
                 theme: 'vs-light',
-                automaticLayout: true
+                automaticLayout: true,
+                minimap: {
+                enabled: false // Disable the minimap
+            }
             });
         });
 
+        // Handle Language Change
+        const languageSelector = document.querySelector('#language-selector');
+        languageSelector.addEventListener('change', () => {
+            const language = languageSelector.value;
+            const defaultCode = {
+                c: `#include <stdio.h>\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
+                cpp: `#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`,
+                python: `print("Hello, World!")`,
+                javascript: `console.log("Hello, World!");`,
+                java: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
+            };
+            window.editor.setValue(defaultCode[language]);
+            monaco.editor.setModelLanguage(window.editor.getModel(), language);
+        });
+
         // Run Code Button
-        document.getElementById('run').addEventListener('click', async () => {
-            const code = window.editor.getValue();
-            const response = await fetch('/run', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code, language: 'c' })
-            });
-            const result = await response.json();
-            document.getElementById('output').innerText = result.output || result.error;
+        document.querySelector('#run').addEventListener('click', async () => {
+            const button = document.querySelector('#run');
+            const outputDiv = document.querySelector('#output');
+
+            button.disabled = true;
+            outputDiv.textContent = 'Running code...';
+
+            try {
+                const code = window.editor.getValue();
+                const language = languageSelector.value;
+                const response = await fetch('http://127.0.0.1:5000/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, language })
+                });
+
+                if (!response.ok) throw new Error(`Server responded with ${response.status}`);
+
+                const result = await response.json();
+                outputDiv.textContent = result.output || result.error || 'No output received.';
+            } catch (error) {
+                outputDiv.textContent = `Error: ${error.message}`;
+            } finally {
+                button.disabled = false;
+            }
+        });
+
+        // Resizable Split
+        const resizer = document.getElementById('resizer');
+        const editor = document.getElementById('editor');
+        const output = document.getElementById('output');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            const container = document.getElementById('split-container');
+            const containerRect = container.getBoundingClientRect();
+            const newEditorWidth = e.clientX - containerRect.left;
+
+            const percentage = (newEditorWidth / containerRect.width) * 100;
+            editor.style.flexBasis = `${percentage}%`;
+            output.style.flexBasis = `${100 - percentage}%`;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+            }
         });
     </script>
 </body>

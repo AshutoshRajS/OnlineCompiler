@@ -1,15 +1,17 @@
+# Online Compiler 
 
-#  Online  Compiler 
-This project provides an online compiler for C code, built using Flask and Monaco Editor. It allows users to write and run C code directly from their browser. In the future, it will be upgraded to support multiple programming languages with an improved user interface.
+This project provides an online compiler with multi-language support. It allows users to write, compile, and run code in different programming languages using the Monaco Editor for code editing and a backend server for running the code.
 
 ## Features
-Code Editor: Monaco Editor for syntax highlighting and code editing.
+- Multi-Language Support: Currently supports C, C++, Python, Java, and JavaScript.
+- Code Editor: Monaco Editor for syntax highlighting and code editing.
 
-Run Code: Execute C code directly in the browser and see the output.
+- Run Code: Execute C/python/java/javscript code directly in the browser and see the output.
 
-Simple and Clean UI: Designed for ease of use, with a responsive interface.
+- Simple and Clean UI: Designed for ease of use, with a responsive interface.
+- Resizable Panels: The editor and output panels are resizable for a better user experience.
 
-Scalable: Future updates will support multiple programming languages (e.g., Python, Java, JavaScript).
+Scalable: Future updates will support multiple programming languages 
 
 ## Technologies Used
 ### Frontend:
@@ -53,10 +55,10 @@ Run the Application:
 	Open your browser and visit http://127.0.0.1:5000 to start using the online compiler.
 
 ## Screenshot
-![alt text](image.png)
+![alt text](image-1.png)
 
 ## Usage
-Write Code: Write your C code in the Monaco editor.
+Write Code: Write your code in the Monaco editor.
 
 Run Code: Click the "Run Code" button to compile and execute the code.
 
@@ -65,17 +67,17 @@ Backend Overview
 
 /run: Accepts POST requests with the user's code and language preference.
 
-Currently supports C language for compiling and running the code.
-The backend executes the code via gcc and returns the output or error messages.
+Currently supports C/Python/CPP/Java/Javascript language for compiling and running the code.
+The backend executes the c /cpp code via gcc and returns the output or error messages.
 
 ## Future Upgrades
 
 The project will be upgraded in the future to support more programming languages. Features planned for the next version include:
 
-Multi-Language Support: Support for Python, Java, JavaScript, and more.
 Improved UI: A more modern, feature-rich design.
 Enhanced Features: Support for saving code, managing user sessions, and sharing code snippets.
-Contributing
+
+# Contributing
 Contributions are welcome! If you have any ideas or improvements for this project, feel free to fork the repository and submit a pull request.
 
 # License

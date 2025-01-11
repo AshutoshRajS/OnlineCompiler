@@ -16,6 +16,10 @@ def home():
 # Commands for different languages
 LANGUAGE_COMMANDS = {
     'c': {'compile': 'gcc {source} -o {output}', 'execute': './{output}'},
+    'cpp': {'compile': 'g++ {source} -o {output}', 'execute': './{output}'},
+    'python': {'execute': 'python {source}'},
+    'javascript': {'execute': 'node {source}'},
+    'java': {'compile': 'javac {source}', 'execute': 'java {class_name}'}
 }
 
 @app.route('/run', methods=['POST'])
@@ -28,7 +32,8 @@ def run_code():
         return jsonify({'error': 'Unsupported language!'}), 400
 
     file_extension = {
-        'c': 'c'
+        'c': 'c', 'cpp': 'cpp', 'python': 'py', 
+        'javascript': 'js', 'java': 'java'
     }.get(language, 'txt')
 
     file_name = f"{uuid.uuid4().hex}.{file_extension}"
@@ -89,7 +94,9 @@ def run_code():
             os.remove(output_name)
         if platform.system() == 'Windows' and os.path.exists(f"{output_name}.exe"):
              os.remove(f"{output_name}.exe")
-       
+        if language == 'java' and os.path.exists(f"{file_name.split('.')[0]}.class"):
+            os.remove(f"{class_name.split('.')[0]}.class")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
