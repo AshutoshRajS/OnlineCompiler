@@ -1,0 +1,157 @@
+<!----/*IMPROVED UI*/-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online  C Compiler</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/editor/editor.main.css">
+    <style>
+		/*IMPROVED UI*/
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin: 20px auto;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        #editor {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap;
+            overflow: auto;
+            max-height: 200px;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            #controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            #editor-container {
+                margin: 10px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>Online Compiler</header>
+    <div id="editor-container">
+        <div id="editor"></div>
+        <div id="controls">
+            <button id="run">Run Code</button>
+        </div>
+        <div id="output">Output will appear here...</div>
+    </div>
+    <footer>
+        Built with ❤️ for coding enthusiasts. View on <a href="#">GitHub</a>.
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        // Load Monaco Editor
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            window.editor = monaco.editor.create(document.getElementById('editor'), {
+                value: `#include <stdio.h>\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
+                language: 'c',
+                theme: 'vs-light',
+                automaticLayout: true
+            });
+        });
+
+        // Run Code Button
+        document.getElementById('run').addEventListener('click', async () => {
+            const code = window.editor.getValue();
+            const response = await fetch('/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, language: 'c' })
+            });
+            const result = await response.json();
+            document.getElementById('output').innerText = result.output || result.error;
+        });
+    </script>
+</body>
+</html>
